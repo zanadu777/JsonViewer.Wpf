@@ -6,16 +6,16 @@
         xmlns:local="clr-namespace:JsonViewer.Wpf"
         xmlns:controls="clr-namespace:JsonViewer.Controls;assembly=JsonViewer.Controls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="900">
   <DockPanel>
     <Menu DockPanel.Dock="Top">
       <MenuItem Header="Data">
         <MenuItem x:Name="mnuLoadCountries"   Header="Load Countries" Click="mnuLoadCountries_Click" />
-
+        <MenuItem x:Name="mnuLoadBookstore"   Header="Load Bookstore" Click="mnuLoadBookstore_Click" />
       </MenuItem>
     </Menu>
     <Grid>
-        <controls:JsonViewerControl/>
+        <controls:JsonViewerControl x:Name="TreeView"/>
     </Grid>
   </DockPanel>
 </Window>

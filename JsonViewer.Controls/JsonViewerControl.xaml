@@ -8,13 +8,18 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="200"/>
+        <ColumnDefinition Width="300"/>
         <ColumnDefinition Width="4"/>
         <ColumnDefinition/>
     </Grid.ColumnDefinitions>
-      <TreeView>
-
-      </TreeView>
+      <TreeView x:Name="TreeViewControl">
+        <TreeView.ItemContainerStyle>
+          <Style TargetType="TreeViewItem">
+            <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+          </Style>
+        </TreeView.ItemContainerStyle>
+    </TreeView >
       <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
     </Grid>
 </UserControl>

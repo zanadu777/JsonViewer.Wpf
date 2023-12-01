@@ -60,6 +60,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="TreeProcessor.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -101,6 +103,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataSets\DataSets.csproj">
+      <Project>{0272d4ad-496c-44ee-a545-2c31228fac08}</Project>
+      <Name>DataSets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\JsonTools\JsonTools.csproj">
+      <Project>{2caac009-ce21-483d-a3a7-9361f7ed25f9}</Project>
+      <Name>JsonTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\JsonViewer.Controls\JsonViewer.Controls.csproj">
       <Project>{1df52f03-f6e4-4fde-b64b-122b92004178}</Project>
       <Name>JsonViewer.Controls</Name>
