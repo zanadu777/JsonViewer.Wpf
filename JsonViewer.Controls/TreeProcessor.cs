@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JsonViewer.Wpf
+namespace JsonViewer.Controls
 {
   public static  class TreeProcessor
   {
@@ -22,6 +19,5 @@ namespace JsonViewer.Wpf
      foreach (var child in getChildren(node))
        child.GetNodes(getChildren, nodes);
     }
-
   }
 }

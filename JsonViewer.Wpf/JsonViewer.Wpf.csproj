@@ -36,6 +36,9 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>11</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Json.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -60,8 +63,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="DictionaryExtensions.cs" />
-    <Compile Include="TreeProcessor.cs" />
+    <Compile Include="DesignTime\DesignTimeData.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -115,10 +117,10 @@
       <Project>{1df52f03-f6e4-4fde-b64b-122b92004178}</Project>
       <Name>JsonViewer.Controls</Name>
     </ProjectReference>
-    <ProjectReference Include="..\JsonViewer.Lib\JsonViewer.Lib.csproj">
-      <Project>{69952291-5b7a-40cd-9c69-f2579cc1c34b}</Project>
-      <Name>JsonViewer.Lib</Name>
-    </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Json.ico" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

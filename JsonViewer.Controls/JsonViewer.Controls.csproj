@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,8 +31,12 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -48,9 +53,17 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeGenerators\JsonTreeViewerItemGenerator.cs" />
+    <Compile Include="DelegateCommand.cs" />
+    <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="JsonNodeType.cs" />
+    <Compile Include="JsonTreeViewFilterDefinition.cs" />
+    <Compile Include="JsonTreeViewItem.cs" />
+    <Compile Include="JsonTreeViewFilter.cs" />
     <Compile Include="JsonViewerControl.xaml.cs">
       <DependentUpon>JsonViewerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="JsonViewerVm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -64,10 +77,14 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="JsonNodes.cs" />
+    <Compile Include="TreeNodeBuilder.cs" />
+    <Compile Include="TreeProcessor.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -80,9 +97,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\JsonViewer.Lib\JsonViewer.Lib.csproj">
-      <Project>{69952291-5b7a-40cd-9c69-f2579cc1c34b}</Project>
-      <Name>JsonViewer.Lib</Name>
+    <ProjectReference Include="..\JsonTools\JsonTools.csproj">
+      <Project>{2caac009-ce21-483d-a3a7-9361f7ed25f9}</Project>
+      <Name>JsonTools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

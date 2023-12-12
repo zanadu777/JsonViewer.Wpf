@@ -1,25 +1,85 @@
-﻿<UserControl x:Class="JsonViewer.Controls.JsonViewerControl"
+﻿<UserControl x:Name="This" x:Class="JsonViewer.Controls.JsonViewerControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JsonViewer.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="300"/>
-        <ColumnDefinition Width="4"/>
-        <ColumnDefinition/>
+             d:DesignHeight="450" d:DesignWidth="800"
+             >
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="30"/>
+      <RowDefinition/>
+      <RowDefinition  Height="60"/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="300"/>
+      <ColumnDefinition Width="4"/>
+      <ColumnDefinition/>
     </Grid.ColumnDefinitions>
-      <TreeView x:Name="TreeViewControl">
-        <TreeView.ItemContainerStyle>
-          <Style TargetType="TreeViewItem">
-            <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
-            <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
-          </Style>
-        </TreeView.ItemContainerStyle>
-    </TreeView >
-      <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
+
+    <Grid Grid.Row="0"   Grid.Column="0" Grid.ColumnSpan="3" Margin="2"    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  >
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition />
+        <ColumnDefinition Width="60"/>
+      </Grid.ColumnDefinitions>
+      <TextBox  HorizontalAlignment="Stretch" Text="{Binding ElementName=This, Path = FilterText, UpdateSourceTrigger=PropertyChanged}"/>
+      <Button Content="Search" Grid.Column="1" Margin="4,0,0,0" Command="{Binding ElementName=This, Path=SearchJsonCommand }"/>
     </Grid>
+
+    <TabControl Grid.Row="1" SelectedIndex="{Binding ElementName=This, Path=JsonTabSelectedIndex}">
+      <TabItem Header="JSON"  >
+        <TreeView x:Name="TreeViewControl" Grid.Row="1"
+                ItemsSource="{Binding ElementName=This, Path=ItemsSource}" SelectedItemChanged="TreeViewControl_SelectedItemChanged"
+                 >
+          <TreeView.ItemContainerStyle>
+            <Style TargetType="TreeViewItem">
+              <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+              <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+            </Style>
+          </TreeView.ItemContainerStyle>
+        </TreeView >
+
+      </TabItem>
+
+      <TabItem Header="Filtered">
+        <TreeView  
+                  ItemsSource="{Binding ElementName=This, Path=FilteredItemsSource}" SelectedItemChanged="TreeViewControl_SelectedItemChanged"
+        >
+          <TreeView.ItemContainerStyle>
+            <Style TargetType="TreeViewItem">
+              <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+              <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+            </Style>
+          </TreeView.ItemContainerStyle>
+        </TreeView >
+
+      </TabItem>
+    </TabControl>
+    <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" />
+
+    <Grid Grid.Row="2" Grid.ColumnSpan="3">
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="40"/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <TextBlock Text="Path:" FontWeight="Bold" Margin="2" VerticalAlignment="Center"/>
+      <TextBlock Grid.Row="1" Text="Value:"  FontWeight="Bold" Margin="2" VerticalAlignment="Center"/>
+      <TextBox Grid.Column="1" Text="{Binding ElementName=This, Path=SelectedPath}" Height="23"/>
+      <TextBox Grid.Row="1"  Grid.Column="1" Text="{Binding ElementName=This, Path=SelectedValue}" Height="23"/>
+    </Grid>
+
+  </Grid>
+
+
+
+
+
+
 </UserControl>

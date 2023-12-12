@@ -5,17 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JsonViewer.Wpf"
         xmlns:controls="clr-namespace:JsonViewer.Controls;assembly=JsonViewer.Controls"
+        xmlns:designTime="clr-namespace:JsonViewer.Wpf.DesignTime"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="900">
+        Title="MainWindow" Height="450" Width="900"
+        d:DataContext="{x:Static designTime:DesignTimeData.JsonViewerVmBook}">
   <DockPanel>
     <Menu DockPanel.Dock="Top">
       <MenuItem Header="Data">
         <MenuItem x:Name="mnuLoadCountries"   Header="Load Countries" Click="mnuLoadCountries_Click" />
         <MenuItem x:Name="mnuLoadBookstore"   Header="Load Bookstore" Click="mnuLoadBookstore_Click" />
       </MenuItem>
+      <MenuItem Header="Json">
+        <MenuItem   x:Name="mnuOpenAll" Header="Open All" Command="{Binding  OpenAllNodesCommand}"/>
+        <MenuItem   x:Name="mnuCloseAll" Header="Close All" Command="{Binding  CloseAllNodesCommand}"/>
+      </MenuItem>
     </Menu>
     <Grid>
-        <controls:JsonViewerControl x:Name="TreeView"/>
+      <controls:JsonViewerControl x:Name="TreeView" 
+                                  ItemsSource="{Binding TreeViewItems}"
+                                  FilteredItemsSource="{Binding FilteredTreeViewItems}"
+                                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                  SelectedPath="{Binding SelectedPath}"
+                                  SearchJsonCommand ="{Binding SearchJsonCommand}"
+                                  FilterText="{Binding FilterText, Mode=TwoWay}"
+                                  JsonTabSelectedIndex ="{Binding Path=JsonTabSelectedIndex, Mode=TwoWay}"/>
     </Grid>
   </DockPanel>
 </Window>
