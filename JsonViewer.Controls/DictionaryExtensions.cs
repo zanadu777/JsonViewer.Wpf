@@ -33,7 +33,6 @@ namespace JsonViewer.Controls
       return sb.ToString();
     }
 
-
     public static List<KeyValuePair<TKey, TValue>> ToPairs<TKey, TValue>(this Dictionary<TKey, TValue> dictionary)
     {
       var pairs = new List<KeyValuePair<TKey, TValue>>();
@@ -43,6 +42,5 @@ namespace JsonViewer.Controls
       }
       return pairs;
     }
-
   }
 }

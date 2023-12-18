@@ -14,6 +14,7 @@
       <MenuItem Header="Data">
         <MenuItem x:Name="mnuLoadCountries"   Header="Load Countries" Click="mnuLoadCountries_Click" />
         <MenuItem x:Name="mnuLoadBookstore"   Header="Load Bookstore" Click="mnuLoadBookstore_Click" />
+        <MenuItem Header="Load Financial News Article"  Click="LoadFinancialNewsArticle" />
       </MenuItem>
       <MenuItem Header="Json">
         <MenuItem   x:Name="mnuOpenAll" Header="Open All" Command="{Binding  OpenAllNodesCommand}"/>
@@ -28,7 +29,8 @@
                                   SelectedPath="{Binding SelectedPath}"
                                   SearchJsonCommand ="{Binding SearchJsonCommand}"
                                   FilterText="{Binding FilterText, Mode=TwoWay}"
-                                  JsonTabSelectedIndex ="{Binding Path=JsonTabSelectedIndex, Mode=TwoWay}"/>
+                                  JsonTabSelectedIndex ="{Binding Path=JsonTabSelectedIndex, Mode=TwoWay}"
+                                  Json="{Binding Path= Json, Mode=OneWay}"/>
     </Grid>
   </DockPanel>
 </Window>

@@ -1,4 +1,4 @@
-﻿namespace JsonTools
+﻿namespace JsonViewer.Controls.Extensions
 {
   public static  class StringExtensions
   {

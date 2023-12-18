@@ -53,17 +53,18 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGenerators\JsonTreeViewerItemGenerator.cs" />
+    <Compile Include="Converters\BoolToVisibilityConverter .cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="DictionaryExtensions.cs" />
-    <Compile Include="JsonNodeType.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="JsonFilterResult.cs" />
     <Compile Include="JsonTreeViewFilterDefinition.cs" />
     <Compile Include="JsonTreeViewItem.cs" />
-    <Compile Include="JsonTreeViewFilter.cs" />
     <Compile Include="JsonViewerControl.xaml.cs">
       <DependentUpon>JsonViewerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="JsonViewerVm.cs" />
+    <Compile Include="NewtonsoftDependent\JsonTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -78,7 +79,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="JsonNodes.cs" />
-    <Compile Include="TreeNodeBuilder.cs" />
+    <Compile Include="NewtonsoftDependent\TreeNodeBuilder.cs" />
     <Compile Include="TreeProcessor.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -96,11 +97,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\JsonTools\JsonTools.csproj">
-      <Project>{2caac009-ce21-483d-a3a7-9361f7ed25f9}</Project>
-      <Name>JsonTools</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

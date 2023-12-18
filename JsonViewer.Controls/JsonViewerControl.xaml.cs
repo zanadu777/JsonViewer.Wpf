@@ -117,9 +117,26 @@ namespace JsonViewer.Controls
     }
     #endregion
 
+    #region Json
+    public static readonly DependencyProperty jsonProperty = DependencyProperty.Register(
+      nameof(Json), typeof(string), typeof(JsonViewerControl), new PropertyMetadata(default(string)));
+
+    public string Json
+    {
+      get { return (string)GetValue(jsonProperty); }
+      set { SetValue(jsonProperty, value); }
+    }
+    #endregion
+
     private void TreeViewControl_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
       SelectedItem = (JsonTreeViewItem)e.NewValue;
+    }
+
+
+    private void TreeViewItem_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+    {
+      e.Handled = true;
     }
   }
 }

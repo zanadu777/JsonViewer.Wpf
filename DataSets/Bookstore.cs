@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataSets
 {
-    public class Bookstore
+    public  class Bookstore
     {
       public string URL => @"https://www.kaggle.com/datasets/bishop36/bookstore/";
 

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
+using DataSets;
 using JsonViewer.Controls;
 
 namespace JsonViewer.Wpf
@@ -44,6 +45,8 @@ namespace JsonViewer.Wpf
 
 
 
+
+
     private void mnuLoadBookstore_Click(object sender, RoutedEventArgs e)
     {
       var bookstore = new DataSets.Bookstore();
@@ -52,7 +55,11 @@ namespace JsonViewer.Wpf
       
     }
 
-   
+    private void LoadFinancialNewsArticle(object sender, RoutedEventArgs e)
+    {
+      var article = new UsFinancialNewsArticle();
+      ((JsonViewerVm)this.DataContext).DisplayJson(article.Json);
+    }
   }
 }
 

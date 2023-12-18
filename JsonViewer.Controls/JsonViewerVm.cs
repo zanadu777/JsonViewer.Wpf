@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using JsonViewer.Controls.NewtonsoftDependent;
 
 namespace JsonViewer.Controls
 {
@@ -17,18 +18,28 @@ namespace JsonViewer.Controls
     private string filterText;
     private int jsonTabSelectedIndex;
     private int defaultOpenWithDepthBelow = 1;
-    private JsonTreeViewFilter filter = new();
+    private string json;
+    private string selectedCaseSensitivity;
+    private string selectedElementToSearch;
+    private bool isAutoFiltering;
 
+    public JsonTreeViewFilterDefinition Definition { get; } = new();
+    public JsonTreeViewFilterDefinition PreviousDefinition { get; set; }
+    public JsonFilterResult FilterResult { get; set; }
 
 
     public JsonViewerVm()
     {
-      SearchJsonCommand = new DelegateCommand(OnSearchJson, x => true);
-      OpenAllNodesCommand = new DelegateCommand(OnOpenAllNodes, x => true);
-      CloseAllNodesCommand = new DelegateCommand(OnCloseAllNodes, x => true);
+      SearchJsonCommand = new DelegateCommand(OnSearchJson, _ => true);
+      OpenAllNodesCommand = new DelegateCommand(OnOpenAllNodes, _ => true);
+      CloseAllNodesCommand = new DelegateCommand(OnCloseAllNodes, _ => true);
       IsCheckingKeys = true;
       IsCheckingValues = true;
       IsCaseSensitive = false;
+      IsAutoFiltering = true;
+
+      SelectedCaseSensitivity = "Case Insensitive";
+      SelectedElementToSearch = "Both";
     }
 
     private void OnCloseAllNodes(object obj)
@@ -74,54 +85,157 @@ namespace JsonViewer.Controls
 
     public bool IsCaseSensitive
     {
-      get => filter.Definition.IsCaseSensitive;
+      get => Definition.IsCaseSensitive;
       set
       {
-        if (value == filter.Definition.IsCaseSensitive)
+        if (value == Definition.IsCaseSensitive)
           return;
 
-        filter.Definition.IsCaseSensitive = value;
+        Definition.IsCaseSensitive = value;
         OnPropertyChanged();
       }
     }
 
     public bool IsCheckingValues
     {
-      get => filter.Definition.IsCheckingValues;
+      get => Definition.IsCheckingValues;
       set
       {
-        if (value == filter.Definition.IsCheckingValues)
+        if (value == Definition.IsCheckingValues)
           return;
-        filter.Definition.IsCheckingValues = value;
+
+        Definition.IsCheckingValues = value;
+        selectedElementToSearch = GetSelectedElementToSearch();
         OnPropertyChanged();
+        OnPropertyChanged(nameof(SelectedElementToSearch));
+        OnSearchJson(null);
       }
     }
 
     public bool IsCheckingKeys
     {
-      get => filter.Definition.IsCheckingKeys;
+      get => Definition.IsCheckingKeys;
       set
       {
-        if (value == filter.Definition.IsCheckingKeys)
+        if (value == Definition.IsCheckingKeys)
           return;
 
-        filter.Definition.IsCheckingKeys = value;
+        Definition.IsCheckingKeys = value;
+        selectedElementToSearch = GetSelectedElementToSearch();
         OnPropertyChanged();
+        OnPropertyChanged(nameof(SelectedElementToSearch));
+        OnSearchJson(null);
       }
+    }
+
+    private string GetSelectedElementToSearch()
+    {
+      if (IsCheckingKeys && IsCheckingValues)
+        return "Both";
+
+      if (IsCheckingKeys  )
+        return "Keys";
+
+      if (  IsCheckingValues)
+        return "Values";
+
+      throw new Exception("need to search for something");
     }
 
     private void OnSearchJson(object obj)
     {
-      filter.Definition.FilterText = FilterText;
-      filter.FullNodes = nodeDict;
+      if (string.IsNullOrWhiteSpace(FilterText))
+        return;
 
+      Definition.FilterText = FilterText;
+      FilterResult = Definition.Filter(nodeDict);
 
       FilteredTreeViewItems.Clear();
-      foreach (var node in filter.Filter().Values)
-        FilteredTreeViewItems.Add(node.ShallowClone());
+      foreach (var node in FilterResult.Full.Values)
+      {
+        var clone = node.ShallowClone();
+        if (FilterResult.Key.ContainsKey(clone.Path))
+          clone.IsKeyHilighted = true;
 
+        if (FilterResult.Value.ContainsKey(clone.Path))
+          clone.IsValueHilighted = true;
+
+        clone.GenerateHeader();
+        FilteredTreeViewItems.Add(clone);
+      }
 
       JsonTabSelectedIndex = 1;
+    }
+
+    public bool IsAutoFiltering
+    {
+      get => isAutoFiltering;
+      set
+      {
+        if (value == isAutoFiltering) return;
+        isAutoFiltering = value;
+        OnPropertyChanged();
+      }
+    }
+
+    public ObservableCollection<string> CaseSensitivities { get; } = new ObservableCollection<string>(new[] { "Case Insensitive", "Case Sensitive" });
+
+    public string SelectedCaseSensitivity
+    {
+      get => selectedCaseSensitivity;
+      set
+      {
+        if (value == selectedCaseSensitivity) 
+          return;
+
+        selectedCaseSensitivity = value;
+        if (selectedCaseSensitivity == "Case Sensitive") 
+         Definition.IsCaseSensitive = true;
+        if (selectedCaseSensitivity == "Case Insensitive")
+          Definition.IsCaseSensitive = false;
+
+        OnPropertyChanged(nameof(IsCaseSensitive));
+        OnPropertyChanged();
+        OnSearchJson(null);
+      }
+    }
+
+    public ObservableCollection<string> ElementsToSearch { get; }= new ObservableCollection<string>(new[] { "Both", "Keys" , "Values"});
+
+    public string SelectedElementToSearch
+    {
+      get => selectedElementToSearch;
+      set
+      {
+        if (value == selectedElementToSearch) 
+          return;
+
+        selectedElementToSearch = value;
+
+        if (selectedElementToSearch == "Both")
+        {
+          Definition.IsCheckingKeys = true;
+          Definition.IsCheckingValues = true;
+        }
+
+        if (selectedElementToSearch == "Keys")
+        {
+          Definition.IsCheckingKeys = true;
+          Definition.IsCheckingValues = false;
+        }
+          
+
+        if (selectedElementToSearch == "Values")
+        {
+          Definition.IsCheckingKeys = false;
+          Definition.IsCheckingValues = true;
+        }
+
+        OnPropertyChanged();
+        OnPropertyChanged(nameof(IsCheckingKeys));
+        OnPropertyChanged(nameof(IsCheckingValues));
+        OnSearchJson(null);
+      }
     }
 
     public ObservableCollection<JsonTreeViewItem> TreeViewItems { get; } = new();
@@ -132,11 +246,12 @@ namespace JsonViewer.Controls
       get => selectedItem;
       set
       {
-        if (Equals(value, selectedItem)) 
+        if (Equals(value, selectedItem))
           return;
 
         selectedItem = value;
-        SelectedPath = selectedItem.Path;
+
+        SelectedPath = (value == null) ? null : selectedItem.Path;
         OnPropertyChanged();
       }
     }
@@ -146,7 +261,7 @@ namespace JsonViewer.Controls
       get => selectedPath;
       set
       {
-        if (value == selectedPath) 
+        if (value == selectedPath)
           return;
 
         selectedPath = value;
@@ -195,26 +310,46 @@ namespace JsonViewer.Controls
           return;
 
         filterText = value;
-        Debug.WriteLine(FilterText);
+        if (IsAutoFiltering)
+        {
+          OnSearchJson(null);
+        }
         OnPropertyChanged();
       }
     }
 
+    public void DisplayJson(string jsonInput)
+    {
+      DisplayJson(jsonInput, false);
+    }
 
-    public void DisplayJson(string json)
+    private void DisplayJson(string jsonInput, bool fromPropertyChange)
     {
       var nodeBuilder = new TreeNodeBuilder();
       TreeViewItems.Clear();
-      var nodesResult = nodeBuilder.Build(json);
+      var nodesResult = nodeBuilder.Build(jsonInput);
 
       nodeDict = nodesResult.ItemsDictionary;
 
       foreach (var node in nodesResult.Items)
         TreeViewItems.Add(node);
 
-      var summary = nodeDict.Summary();
-
       OpenWithDepthBelow(DefaultOpenWithDepthBelow);
+
+      if (!fromPropertyChange)
+        Json = jsonInput;
+    }
+
+    public string Json
+    {
+      get => json;
+      set
+      {
+        if (value == json) return;
+        json = value;
+        DisplayJson(json, true);
+        OnPropertyChanged();
+      }
     }
 
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JsonViewer.Controls
 {
@@ -21,7 +18,7 @@ namespace JsonViewer.Controls
       if (previousDefinition == null)
         return false;
 
-      if (!previousDefinition.FilterText.Contains(FilterText))
+      if (previousDefinition.FilterText == null || !previousDefinition.FilterText.Contains(FilterText))
         return false;
 
       if (previousDefinition.IsCaseSensitive && !IsCaseSensitive)
@@ -49,64 +46,32 @@ namespace JsonViewer.Controls
       return clone;
     }
 
-    public Dictionary<string, JsonTreeViewItem> Filter(Dictionary<string, JsonTreeViewItem> source)
+    public JsonFilterResult Filter(Dictionary<string, JsonTreeViewItem> source)
     {
-      var filtered = new Dictionary<string, JsonTreeViewItem>();
+      var filtered = new JsonFilterResult();
 
-      if (IsCaseSensitive)
-      {
-        foreach (var node in source.Values)
-        {
-          if (IsCheckingKeys)
-            if (node.Key != null && node.Key.Contains(FilterText))
-              filtered[node.Path] = node;
-
-          if (IsCheckingValues)
-            if (node.Value != null && node.ValueAsText.Contains(FilterText))
-              filtered[node.Path] = node;
-        }
-      }
-      else
-      {
-        foreach (var node in source.Values)
-        {
-          if (IsCheckingKeys)
-            if (node.Key != null && node.Key.IndexOf(FilterText,StringComparison.OrdinalIgnoreCase)!= -1)
-              filtered[node.Path] = node;
-
-          if (IsCheckingValues)
-            if (node.Value != null && node.ValueAsText.IndexOf(FilterText, StringComparison.OrdinalIgnoreCase) != -1)
-              filtered[node.Path] = node;
-        }
-      }
-
-
-      return filtered;
-    }
-
-    public Dictionary<string, JsonTreeViewItem> FilterInPlace(Dictionary<string, JsonTreeViewItem> source)
-    {
-      List<string> keysToRemove = new List<string>();
+      Func<string, string, bool> caseInsensitiveFilter = (text, filterText) => text != null && text.IndexOf(filterText, StringComparison.OrdinalIgnoreCase) != -1;
+      Func<string, string, bool> caseSensitiveFilter = (text, filterText) => text != null && text.Contains(filterText);
+      Func<string, string, bool> filter = IsCaseSensitive ? caseSensitiveFilter : caseInsensitiveFilter;
 
       foreach (var node in source.Values)
       {
-        if (IsCheckingKeys && IsCheckingValues)
-          if (!node.Key.Contains(FilterText) && !node.ValueAsText.Contains(FilterText))
-            keysToRemove.Add(node.Key);
+        if (IsCheckingKeys)
+          if (filter(node.Key, FilterText))
+          {
+            filtered.Full[node.Path] = node;
+            filtered.Key[node.Path] = node;
+          }
 
-        if (IsCheckingKeys && !IsCheckingValues)
-          if (!node.Key.Contains(FilterText))
-            keysToRemove.Add(node.Key);
-
-        if (!IsCheckingKeys && IsCheckingValues)
-          if (!node.ValueAsText.Contains(FilterText))
-            keysToRemove.Add(node.Key);
+        if (IsCheckingValues)
+          if (filter(node.ValueAsText, FilterText))
+          {
+            filtered.Full[node.Path] = node;
+            filtered.Value[node.Path] = node;
+          }
       }
 
-      foreach (var key in keysToRemove)
-        source.Remove(key);
-
-      return source;
+      return filtered;
     }
   }
 }
