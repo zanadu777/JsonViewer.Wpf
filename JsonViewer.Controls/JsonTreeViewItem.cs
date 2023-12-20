@@ -8,9 +8,10 @@ namespace JsonViewer.Controls
 {
   public class JsonTreeViewItem : TreeViewItem
   {
-    private static SolidColorBrush grayBrush = new SolidColorBrush(Colors.Gray);
-    private static  SolidColorBrush blackBrush = new SolidColorBrush(Colors.Black);
-    private static SolidColorBrush hilightBrush = new SolidColorBrush(Color.FromRgb(255,176,148));
+    private static SolidColorBrush grayBrush = new(Colors.Gray);
+    private static  SolidColorBrush blackBrush = new(Colors.Black);
+    private static SolidColorBrush hilightBrush = new(Color.FromRgb(255,176,148));
+    public static SolidColorBrush selectedFill = new SolidColorBrush(Colors.Gainsboro);
     private object value;
     public string Path { get; set; }
     public int Depth { get; set; }
@@ -37,6 +38,8 @@ namespace JsonViewer.Controls
     public bool IsKeyHilighted { get; set; }
     public bool IsValueHilighted { get; set; }
 
+    public bool IsSelected { get; set; }
+
     public void GenerateHeader()
     {
       switch (NodeType)
@@ -47,22 +50,35 @@ namespace JsonViewer.Controls
           valueHeader.Inlines.Add(new Run("="));
           var valueValueRun = new Run($" {HeaderValueText(Value.GetType())} "){Background=IsValueHilighted ?hilightBrush:null};
           valueHeader.Inlines.Add(valueValueRun);
-         // Header = $"{Key} = {HeaderValueText(Value.GetType())}";
-          Header = valueHeader;
+
+          Header = Wrap(valueHeader);
           break;
         case "array":
           var arrayHeader = new TextBlock();
           arrayHeader.Inlines.Add(new Run(Key) { FontWeight = FontWeights.Bold, Foreground = grayBrush });
           if (IsEmptyArray)
             arrayHeader.Inlines.Add(new Run(" = []") { Foreground = grayBrush });
-          Header = arrayHeader;
+          Header = Wrap(arrayHeader);
           break;
         case "object":
           var objHeader = new TextBlock();
-          objHeader.Inlines.Add(new Run(Key) { FontWeight = FontWeights.Bold });
-          Header = objHeader;
+          objHeader.Inlines.Add(new Run(Key) { FontWeight = FontWeights.Bold , Foreground=blackBrush});
+          Header = Wrap(objHeader);
           break;
       }
+    }
+
+    public Border Wrap(TextBlock textBlock)
+    {
+      var border = new Border
+      {
+        Child = textBlock,
+        Margin = new Thickness(1, 1, 1, 1),
+        BorderThickness = new Thickness(1, 1, 1, 1),
+        BorderBrush = IsSelected ? grayBrush : null,
+        Background = IsSelected ? selectedFill : null
+      };
+      return border;
     }
 
     private string HeaderValueText(Type valueType)

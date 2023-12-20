@@ -27,142 +27,177 @@
       </Grid>
     </Viewbox>
 
-  </UserControl.Resources>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="32"/>
-      <RowDefinition/>
-      <!--<RowDefinition  Height="60"/>-->
-    </Grid.RowDefinitions>
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="300"/>
-      <ColumnDefinition Width="4"/>
-      <ColumnDefinition/>
-    </Grid.ColumnDefinitions>
+    <Viewbox x:Shared="false" x:Key="AddIcon">
+      <Grid Width="26" Height="26" Visibility="Visible">
+        <Path Data="M13.999983,6.0000002L17.900011,6.0000002 17.900011,14.099999 25.999995,14.099999 25.999995,18 17.900011,18 17.900011,26.099999 13.999983,26.099999 13.999983,18 5.8999995,18 5.8999995,14.099999 13.999983,14.099999z M15.999985,3.0999984C8.9000019,3.0999987 3.1000091,8.9000017 3.1000091,16 3.1000091,23.099999 8.9000019,28.900002 15.999985,28.900002 23.100027,28.900002 28.900021,23.099999 28.900021,16 28.900021,8.9000017 23.100027,3.0999987 15.999985,3.0999984z M15.999985,0C24.800042,1.9073195E-07 32,7.1999971 32,16 32,24.800003 24.800042,32 15.999985,32 7.1999887,32 0,24.800003 0,16 0,7.1999971 7.1999887,1.9073195E-07 15.999985,0z" Stretch="Uniform" Fill="#FF16B74E" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+          <Path.RenderTransform>
+            <TransformGroup>
+              <TransformGroup.Children>
+                <RotateTransform Angle="0" />
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+              </TransformGroup.Children>
+            </TransformGroup>
+          </Path.RenderTransform>
+        </Path>
+      </Grid>
+    </Viewbox>
 
-    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="2"    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  >
-      <DockPanel   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  LastChildFill="True">
-        <Button Content="{StaticResource SearchIcon}" Grid.Column="1"
+    <Viewbox x:Shared="false" x:Key="RemoveIcon">
+      <Grid Width="26" Height="26" Visibility="Visible">
+
+        <Path Data="M5.8999939,14.099991L26,14.099991 26,18 5.8999939,18z M16,3.0999908C8.8999939,3.0999908 3.1000061,8.8999939 3.1000061,16 3.1000061,23.099991 8.8999939,28.899994 16,28.899994 23.100006,28.899994 28.899994,23.099991 28.899994,16 28.899994,8.8999939 23.100006,3.0999908 16,3.0999908z M16,0C24.799988,0 32,7.1999969 32,16 32,24.800003 24.799988,32 16,32 7.1999817,32 0,24.800003 0,16 0,7.1999969 7.1999817,0 16,0z" Stretch="Uniform" Fill="#FFB71616" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+          <Path.RenderTransform>
+            <TransformGroup>
+              <TransformGroup.Children>
+                <RotateTransform Angle="0" />
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+              </TransformGroup.Children>
+            </TransformGroup>
+          </Path.RenderTransform>
+        </Path>
+      </Grid>
+    </Viewbox>
+
+    <Viewbox x:Shared="false" x:Key="ClearIcon">
+      <Grid Width="26" Height="26" Visibility="Visible">
+        <Path Data="M19.249341,8.8055813L8.7684207,19.352768 9.2288508,19.887239C11.503907,22.560051,13.360223,25.226978,16.215853,29.606016L17.748862,28.063396 13.731004,24.020002 14.440004,23.315001 18.453667,27.354174 20.108969,25.688494 16.090999,21.645003 16.8,20.940004 20.813774,24.979271 22.470068,23.312593 18.452005,19.269007 19.161005,18.564008 23.174869,22.603373 24.830665,20.937197 20.813,16.893997 21.522,16.188996 25.535469,20.227974 27.191263,18.5618 23.173002,14.518001 23.882001,13.813 27.896066,17.852577 29.433889,16.305115C25.56372,13.737936,22.901376,11.924357,19.573092,9.0833683z M15.266593,6.7949983C14.048553,6.794998,12.903516,7.2729983,12.041489,8.1399989L8.1073624,12.099001C6.6154397,13.599596,6.3717307,15.887573,7.3753266,17.646483L7.4758306,17.814152 17.715187,7.5106986 17.578355,7.4261627C16.885004,7.0147247,16.091619,6.794998,15.266593,6.7949983z M1.4190006,0L9.3646104,7.9961039 10.622443,6.7299975C11.862483,5.4829971 13.511536,4.7949966 15.266593,4.7949967 16.91102,4.7949966 18.463159,5.3996845 19.673339,6.5027671L19.896704,6.7165616 20.235405,7.0131741C24.072914,10.354743 26.923191,12.24307 31.551891,15.310111 31.801891,15.475119 31.964893,15.745106 31.995891,16.042116 32.02589,16.340102 31.922893,16.637097 31.711895,16.850109L16.761853,31.895C16.572856,32.083996 16.317851,32.189997 16.052851,32.189997 16.017855,32.189997 15.983851,32.187998 15.948854,32.184992 15.648851,32.152994 15.377854,31.988003 15.213852,31.733992 11.559844,26.100044 9.5628369,23.222057 6.6528257,19.980076L6.6489466,19.975312 6.4562639,19.771256C4.1357303,17.18508,4.2130814,13.180658,6.6883169,10.690001L7.9547178,9.4152701 0,1.4100008z" Stretch="Uniform" Fill="#FFB71616" Width="26" Height="26" Margin="0,0,0,0" RenderTransformOrigin="0.5,0.5">
+          <Path.RenderTransform>
+            <TransformGroup>
+              <TransformGroup.Children>
+                <RotateTransform Angle="0" />
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+              </TransformGroup.Children>
+            </TransformGroup>
+          </Path.RenderTransform>
+        </Path>
+      </Grid>
+    </Viewbox>
+
+  </UserControl.Resources>
+  <DockPanel>
+    <ToolBarTray DockPanel.Dock="Top">
+      <ToolBar>
+        <Button Content="{StaticResource AddIcon}" Command="{Binding ElementName=This, Path= AddToSelectedItemsCommand}"/>
+        <Button Content="{StaticResource RemoveIcon}"  Command="{Binding ElementName=This, Path= RemoveFromSelectedItemsCommand}"/>
+        <Button Content="{StaticResource ClearIcon}"  Command="{Binding ElementName=This, Path= ClearSelectedItemsCommand}"/>
+      </ToolBar>
+    </ToolBarTray>
+
+    <Grid>
+      <Grid.RowDefinitions>
+        <RowDefinition Height="32"/>
+        <RowDefinition/>
+        <!--<RowDefinition  Height="60"/>-->
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="300"/>
+        <ColumnDefinition Width="4"/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+
+      <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="2"    HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  >
+        <DockPanel   HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  LastChildFill="True">
+          <Button Content="{StaticResource SearchIcon}" Grid.Column="1"
                 Margin="2" 
                 Command="{Binding ElementName=This, Path=SearchJsonCommand }" 
                 Visibility="{Binding IsAutoFiltering , Converter= {StaticResource BoolToVisibilityConverter} , ConverterParameter=True}"
                 DockPanel.Dock="Right" />
-        <Expander DockPanel.Dock="Right"  ExpandDirection="Right" VerticalAlignment="Center" Margin="0,2,0,0" >
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <CheckBox  VerticalAlignment="Center" DockPanel.Dock="Right"  Margin="2, -2,0,0" IsChecked="{Binding IsAutoFiltering}">Auto</CheckBox>
-            <ComboBox Width="115" DockPanel.Dock="Right" Margin="4,1,4,1" ItemsSource="{Binding CaseSensitivities}" SelectedValue="{Binding SelectedCaseSensitivity}"/>
-            <ComboBox Width="62" DockPanel.Dock="Right" Margin="4,1,4,1" ItemsSource ="{Binding ElementsToSearch }" SelectedValue="{Binding SelectedElementToSearch}"/>
-          </StackPanel>
-        </Expander>
-        <TextBox  HorizontalAlignment="Stretch" Text="{Binding ElementName=This, Path = FilterText, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
-      </DockPanel>
-    </Grid>
+          <Expander DockPanel.Dock="Right"  ExpandDirection="Right" VerticalAlignment="Center" Margin="0,2,0,0" >
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+              <CheckBox  VerticalAlignment="Center" DockPanel.Dock="Right"  Margin="2, -2,0,0" IsChecked="{Binding IsAutoFiltering}">Auto</CheckBox>
+              <ComboBox Width="115" DockPanel.Dock="Right" Margin="4,1,4,1" ItemsSource="{Binding CaseSensitivities}" SelectedValue="{Binding SelectedCaseSensitivity}"/>
+              <ComboBox Width="62" DockPanel.Dock="Right" Margin="4,1,4,1" ItemsSource ="{Binding ElementsToSearch }" SelectedValue="{Binding SelectedElementToSearch}"/>
+            </StackPanel>
+          </Expander>
+          <TextBox  HorizontalAlignment="Stretch" Text="{Binding ElementName=This, Path = FilterText, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
+        </DockPanel>
+      </Grid>
 
-    <TabControl Grid.Row="1" SelectedIndex="{Binding ElementName=This, Path=JsonTabSelectedIndex}">
-      <TabItem Header="JSON"  >
-        <TreeView x:Name="TreeViewControl" Grid.Row="1"
+      <TabControl Grid.Row="1" SelectedIndex="{Binding ElementName=This, Path=JsonTabSelectedIndex}">
+        <TabItem Header="JSON"  >
+          <TreeView x:Name="TreeViewControl" Grid.Row="1"
                 ItemsSource="{Binding ElementName=This, Path=ItemsSource}" SelectedItemChanged="TreeViewControl_SelectedItemChanged"
                  >
-          <TreeView.ItemContainerStyle>
-            <Style TargetType="TreeViewItem">
-              <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
-              <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
-              <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView"/>
-            </Style>
-          </TreeView.ItemContainerStyle>
-        </TreeView >
+            <TreeView.ItemContainerStyle>
+              <Style TargetType="TreeViewItem">
+                <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+                <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+                <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView"/>
+              </Style>
+            </TreeView.ItemContainerStyle>
+          </TreeView >
 
-      </TabItem>
+        </TabItem>
 
-      <TabItem Header="Filtered">
-        <TreeView  
+        <TabItem Header="Filtered">
+          <TreeView  
                   ItemsSource="{Binding ElementName=This, Path=FilteredItemsSource}" SelectedItemChanged="TreeViewControl_SelectedItemChanged"
         >
-          <TreeView.ItemContainerStyle>
-            <Style TargetType="TreeViewItem">
-              <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
-              <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
-              <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView"/>
-            </Style>
-          </TreeView.ItemContainerStyle>
-        </TreeView >
+            <TreeView.ItemContainerStyle>
+              <Style TargetType="TreeViewItem">
+                <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+                <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+                <EventSetter Event="RequestBringIntoView" Handler="TreeViewItem_RequestBringIntoView"/>
+              </Style>
+            </TreeView.ItemContainerStyle>
+          </TreeView >
 
-      </TabItem>
+        </TabItem>
 
-      <TabItem Header="Raw Json">
-        <Grid>
-          <TextBox AcceptsReturn ="True" Text="{Binding ElementName=This, Path=Json}"/>
-        </Grid>
-      </TabItem>
-    </TabControl>
-    <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" />
+        <TabItem Header="Raw Json">
+          <Grid>
+            <TextBox AcceptsReturn ="True" Text="{Binding ElementName=This, Path=Json}"/>
+          </Grid>
+        </TabItem>
+      </TabControl>
+      <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" />
 
-    <TabControl Grid.Row="1"   Grid.Column="2" >
-      <TabItem Header="Selected">
-        <Grid>
-          <Grid.Resources>
-            <Style TargetType="TextBlock">
-              <Setter Property="VerticalAlignment" Value="Center"/>
-              <Setter Property="Margin" Value="4"/>
-              <Setter Property="FontWeight" Value="Bold"/>
-            </Style>
-            <Style TargetType="TextBox">
-              <Setter Property="Margin" Value="4"/>
-            </Style>
-          </Grid.Resources>
-          <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="75"/>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="75"/>
-            <ColumnDefinition />
-          </Grid.ColumnDefinitions>
+      <TabControl Grid.Row="1"   Grid.Column="2" >
+        <TabItem Header="Selected">
+          <Grid>
+            <Grid.Resources>
+              <Style TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="4"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+              </Style>
+              <Style TargetType="TextBox">
+                <Setter Property="Margin" Value="4"/>
+              </Style>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="75"/>
+              <ColumnDefinition Width="150"/>
+              <ColumnDefinition Width="75"/>
+              <ColumnDefinition />
+            </Grid.ColumnDefinitions>
 
-          <Grid.RowDefinitions>
-            <RowDefinition Height="30" />
-            <RowDefinition  Height="30" />
-            <RowDefinition  Height="30" />
-            <RowDefinition />
-          </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="30" />
+              <RowDefinition  Height="30" />
+              <RowDefinition  Height="30" />
+              <RowDefinition />
+            </Grid.RowDefinitions>
 
-          <TextBlock Text="Path:"/>
-          <TextBox Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ElementName=This, Path=SelectedPath}"/>
+            <TextBlock Text="Path:"/>
+            <TextBox Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ElementName=This, Path=SelectedPath}"/>
 
-          <TextBlock Text="Key:" Grid.Row="1" />
-          <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ElementName=This, Path= SelectedItem.Key, Mode=OneWay}"/>
-          <TextBlock Text="Node Type:" Grid.Row="1" Grid.Column="2"/>
-          <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding ElementName=This, Path= SelectedItem.NodeType, Mode=OneWay}"/>
+            <TextBlock Text="Key:" Grid.Row="1" />
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ElementName=This, Path= SelectedItem.Key, Mode=OneWay}"/>
+            <TextBlock Text="Node Type:" Grid.Row="1" Grid.Column="2"/>
+            <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding ElementName=This, Path= SelectedItem.NodeType, Mode=OneWay}"/>
 
-          <TextBlock Text="Value:"  Grid.Row="2" />
-          <TextBox Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3" Text="{Binding ElementName=This, Path=SelectedItem.ValueAsText , Mode=OneWay}" AcceptsReturn="True" TextWrapping="WrapWithOverflow"/>
-        </Grid>
-      </TabItem>
-      <TabItem Header ="Db">
+            <TextBlock Text="Value:"  Grid.Row="2" />
+            <TextBox Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3" Text="{Binding ElementName=This, Path=SelectedItem.ValueAsText , Mode=OneWay}" AcceptsReturn="True" TextWrapping="WrapWithOverflow"/>
+          </Grid>
+        </TabItem>
+        <TabItem Header ="Db">
 
-      </TabItem>
+        </TabItem>
 
-    </TabControl>
+      </TabControl>
 
-    <!--<Grid Grid.Row="2" Grid.ColumnSpan="3">
-      <Grid.RowDefinitions>
-        <RowDefinition/>
-        <RowDefinition/>
-      </Grid.RowDefinitions>
-
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="40"/>
-        <ColumnDefinition/>
-      </Grid.ColumnDefinitions>
-      <TextBlock Text="Path:" FontWeight="Bold" Margin="2" VerticalAlignment="Center"/>
-      <TextBlock Grid.Row="1" Text="Value:"  FontWeight="Bold" Margin="2" VerticalAlignment="Center"/>
-      <TextBox Grid.Column="1" Text="{Binding ElementName=This, Path=SelectedPath}" Height="23"/>
-      <TextBox Grid.Row="1"  Grid.Column="1" Text="{Binding ElementName=This, Path=SelectedValue}" Height="23"/>
-    </Grid>-->
-
-  </Grid>
-
-
-
-
-
+    </Grid>
+  </DockPanel>
 
 </UserControl>

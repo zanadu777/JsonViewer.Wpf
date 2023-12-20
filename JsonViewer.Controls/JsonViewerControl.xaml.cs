@@ -10,7 +10,7 @@ namespace JsonViewer.Controls
   /// </summary>
   public partial class JsonViewerControl : UserControl
   {
-    private ObservableCollection<JsonTreeViewItem> items = new ObservableCollection<JsonTreeViewItem>();
+    private ObservableCollection<JsonTreeViewItem> items = new();
 
     public JsonViewerControl()
     {
@@ -19,7 +19,7 @@ namespace JsonViewer.Controls
       JsonTabSelectedIndex = 0;
     }
 
-    public TreeView TreeView => this.TreeViewControl;
+    public TreeView TreeView => TreeViewControl;
 
     #region ItemsSource
     public static readonly DependencyProperty ItemsSourceProperty = DependencyProperty.Register(
@@ -82,6 +82,39 @@ namespace JsonViewer.Controls
     }
     #endregion region
 
+    #region AddToSelectedItemsCommand
+    public static readonly DependencyProperty addToSelectedItemsCommandProperty = DependencyProperty.Register(
+      nameof(AddToSelectedItemsCommand), typeof(ICommand), typeof(JsonViewerControl), new PropertyMetadata(default(ICommand)));
+
+    public ICommand AddToSelectedItemsCommand
+    {
+      get { return (ICommand)GetValue(addToSelectedItemsCommandProperty); }
+      set { SetValue(addToSelectedItemsCommandProperty, value); }
+    }
+    #endregion
+
+    #region RemoveFromSelectedItemsCommand
+    public static readonly DependencyProperty removeFromSelectedItemsCommandProperty = DependencyProperty.Register(
+      nameof(RemoveFromSelectedItemsCommand), typeof(ICommand), typeof(JsonViewerControl), new PropertyMetadata(default(ICommand)));
+
+    public ICommand RemoveFromSelectedItemsCommand
+    {
+      get { return (ICommand)GetValue(removeFromSelectedItemsCommandProperty); }
+      set { SetValue(removeFromSelectedItemsCommandProperty, value); }
+    }
+    #endregion
+
+    #region ClearSelectedItemsCommand
+    public static readonly DependencyProperty clearSelectedItemsCommandProperty = DependencyProperty.Register(
+      nameof(ClearSelectedItemsCommand), typeof(ICommand), typeof(JsonViewerControl), new PropertyMetadata(default(ICommand)));
+
+    public ICommand ClearSelectedItemsCommand
+    {
+      get { return (ICommand)GetValue(clearSelectedItemsCommandProperty); }
+      set { SetValue(clearSelectedItemsCommandProperty, value); }
+    }
+    #endregion
+
     #region SelectedValue 
     public static readonly DependencyProperty SelectedValueProperty = DependencyProperty.Register(
       nameof(SelectedValue), typeof(object), typeof(JsonViewerControl), new PropertyMetadata(default(object)));
@@ -132,7 +165,6 @@ namespace JsonViewer.Controls
     {
       SelectedItem = (JsonTreeViewItem)e.NewValue;
     }
-
 
     private void TreeViewItem_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
     {

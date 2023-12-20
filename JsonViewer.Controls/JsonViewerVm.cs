@@ -22,17 +22,29 @@ namespace JsonViewer.Controls
     private string selectedCaseSensitivity;
     private string selectedElementToSearch;
     private bool isAutoFiltering;
+    private bool isToolTrayVisible;
 
+    public ObservableCollection<JsonTreeViewItem> TreeViewItems { get; } = new();
+    public ObservableCollection<JsonTreeViewItem> FilteredTreeViewItems { get; } = new();
     public JsonTreeViewFilterDefinition Definition { get; } = new();
     public JsonTreeViewFilterDefinition PreviousDefinition { get; set; }
     public JsonFilterResult FilterResult { get; set; }
 
+    public ICommand SearchJsonCommand { get; }
+    public ICommand OpenAllNodesCommand { get; }
+    public ICommand CloseAllNodesCommand { get; }
+    public ICommand AddToSelectedItemsCommand { get; }
+    public ICommand RemoveFromSelectedItemsCommand { get; }
+    public ICommand ClearSelectedItemsCommand { get; }
 
     public JsonViewerVm()
     {
       SearchJsonCommand = new DelegateCommand(OnSearchJson, _ => true);
       OpenAllNodesCommand = new DelegateCommand(OnOpenAllNodes, _ => true);
       CloseAllNodesCommand = new DelegateCommand(OnCloseAllNodes, _ => true);
+      AddToSelectedItemsCommand = new DelegateCommand(OnAddToSelectedItems, _ => true);
+      RemoveFromSelectedItemsCommand = new DelegateCommand(OnRemoveFromSelectedItemsCommand, _ => true);
+      ClearSelectedItemsCommand = new DelegateCommand(OnClearSelectedItemsCommand, _ => true);
       IsCheckingKeys = true;
       IsCheckingValues = true;
       IsCaseSensitive = false;
@@ -40,6 +52,63 @@ namespace JsonViewer.Controls
 
       SelectedCaseSensitivity = "Case Insensitive";
       SelectedElementToSearch = "Both";
+    }
+
+    private void OnClearSelectedItemsCommand(object obj)
+    {
+      foreach (var node in nodeDict.Values)
+        if (node.IsSelected)
+        {
+          node.IsSelected = false;
+          node.GenerateHeader();
+        }
+
+      foreach (var node in FilteredTreeViewItems)
+      {
+        if (node.IsSelected)
+        {
+          node.IsSelected = false;
+          node.GenerateHeader();
+        }
+      }
+    }
+
+    private void OnRemoveFromSelectedItemsCommand(object obj)
+    {
+      if (SelectedPath != null && nodeDict.ContainsKey(SelectedPath))
+      {
+        nodeDict[SelectedPath].IsSelected = false;
+        nodeDict[SelectedPath].GenerateHeader();
+      }
+
+      foreach (var node in FilteredTreeViewItems)
+      {
+        if (node.Path == SelectedPath)
+        {
+          node.IsSelected = false;
+          node.GenerateHeader();
+          break;
+        }
+      }
+    }
+
+    private void OnAddToSelectedItems(object obj)
+    {
+      if (SelectedPath != null && nodeDict.ContainsKey(SelectedPath))
+      {
+        nodeDict[SelectedPath].IsSelected = true;
+        nodeDict[SelectedPath].GenerateHeader();
+      }
+
+      foreach (var node in FilteredTreeViewItems)
+      {
+        if (node.Path == SelectedPath)
+        {
+          node.IsSelected = true;
+          node.GenerateHeader();
+          break;
+        }
+      }
     }
 
     private void OnCloseAllNodes(object obj)
@@ -82,6 +151,16 @@ namespace JsonViewer.Controls
       }
     }
 
+    public bool IsToolTrayVisible
+    {
+      get => isToolTrayVisible;
+      set
+      {
+        if (value == isToolTrayVisible) return;
+        isToolTrayVisible = value;
+        OnPropertyChanged();
+      }
+    }
 
     public bool IsCaseSensitive
     {
@@ -223,7 +302,6 @@ namespace JsonViewer.Controls
           Definition.IsCheckingKeys = true;
           Definition.IsCheckingValues = false;
         }
-          
 
         if (selectedElementToSearch == "Values")
         {
@@ -237,9 +315,6 @@ namespace JsonViewer.Controls
         OnSearchJson(null);
       }
     }
-
-    public ObservableCollection<JsonTreeViewItem> TreeViewItems { get; } = new();
-    public ObservableCollection<JsonTreeViewItem> FilteredTreeViewItems { get; } = new();
 
     public JsonTreeViewItem SelectedItem
     {
@@ -292,13 +367,6 @@ namespace JsonViewer.Controls
         OnPropertyChanged();
       }
     }
-
-    public ICommand SearchJsonCommand { get; }
-
-    public ICommand OpenAllNodesCommand { get; }
-
-    public ICommand CloseAllNodesCommand { get; }
-
 
     public string FilterText
 

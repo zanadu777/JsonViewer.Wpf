@@ -48,7 +48,7 @@ namespace JsonDb
     private void SaveJson(IEnumerable<string> jsons)
     {
       var swatch = Stopwatch.StartNew();
-      var cstring = @"Data Source=Delphi;Initial Catalog=JsonTesting;Persist Security Info=True;User ID=sa;Password=Iscandar2199;TrustServerCertificate=True";
+      var cstring = @"Data Source=Delphi;Initial Catalog=JsonTesting;Persist Security Info=True;User ID=sa;Password=****;TrustServerCertificate=True";
       using var connection = new SqlConnection(cstring);
       connection.Open();
       using var cmd = connection.CreateCommand();

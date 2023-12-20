@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="JsonViewer.Controls.JsonViewerControlWrapper"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:JsonViewer.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+    <local:JsonViewerControl x:Name="TreeView" 
+                                ItemsSource="{Binding TreeViewItems}"
+                                FilteredItemsSource="{Binding FilteredTreeViewItems}"
+                                SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                                SelectedPath="{Binding SelectedPath}"
+                                SearchJsonCommand ="{Binding SearchJsonCommand}"
+                                AddToSelectedItemsCommand="{Binding AddToSelectedItemsCommand}"
+                                RemoveFromSelectedItemsCommand ="{Binding RemoveFromSelectedItemsCommand}"
+                                ClearSelectedItemsCommand="{Binding ClearSelectedItemsCommand}"
+                                FilterText="{Binding FilterText, Mode=TwoWay}"
+                                JsonTabSelectedIndex ="{Binding Path=JsonTabSelectedIndex, Mode=TwoWay}"
+                                Json="{Binding Path= Json, Mode=OneWay}"/>
+  </Grid>
+</UserControl>

@@ -28,6 +28,9 @@
                                   SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
                                   SelectedPath="{Binding SelectedPath}"
                                   SearchJsonCommand ="{Binding SearchJsonCommand}"
+                                  AddToSelectedItemsCommand="{Binding AddToSelectedItemsCommand}"
+                                  RemoveFromSelectedItemsCommand ="{Binding RemoveFromSelectedItemsCommand}"
+                                  ClearSelectedItemsCommand="{Binding ClearSelectedItemsCommand}"
                                   FilterText="{Binding FilterText, Mode=TwoWay}"
                                   JsonTabSelectedIndex ="{Binding Path=JsonTabSelectedIndex, Mode=TwoWay}"
                                   Json="{Binding Path= Json, Mode=OneWay}"/>

@@ -63,6 +63,9 @@
     <Compile Include="JsonViewerControl.xaml.cs">
       <DependentUpon>JsonViewerControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="JsonViewerControlWrapper.xaml.cs">
+      <DependentUpon>JsonViewerControlWrapper.xaml</DependentUpon>
+    </Compile>
     <Compile Include="JsonViewerVm.cs" />
     <Compile Include="NewtonsoftDependent\JsonTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -93,6 +96,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="JsonViewerControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="JsonViewerControlWrapper.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
