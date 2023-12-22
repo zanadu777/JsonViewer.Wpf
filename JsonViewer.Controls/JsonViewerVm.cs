@@ -71,6 +71,8 @@ namespace JsonViewer.Controls
           node.GenerateHeader();
         }
       }
+
+      SelectedPaths.Clear();
     }
 
     private void OnRemoveFromSelectedItemsCommand(object obj)
@@ -90,6 +92,8 @@ namespace JsonViewer.Controls
           break;
         }
       }
+
+      SelectedPaths.Remove(SelectedPath);
     }
 
     private void OnAddToSelectedItems(object obj)
@@ -109,6 +113,8 @@ namespace JsonViewer.Controls
           break;
         }
       }
+
+      SelectedPaths.Add(SelectedPath);
     }
 
     private void OnCloseAllNodes(object obj)
@@ -212,10 +218,10 @@ namespace JsonViewer.Controls
       if (IsCheckingKeys && IsCheckingValues)
         return "Both";
 
-      if (IsCheckingKeys  )
+      if (IsCheckingKeys)
         return "Keys";
 
-      if (  IsCheckingValues)
+      if (IsCheckingValues)
         return "Values";
 
       throw new Exception("need to search for something");
@@ -257,19 +263,20 @@ namespace JsonViewer.Controls
       }
     }
 
-    public ObservableCollection<string> CaseSensitivities { get; } = new ObservableCollection<string>(new[] { "Case Insensitive", "Case Sensitive" });
+    public ObservableCollection<string> CaseSensitivities { get; } =
+      new ObservableCollection<string>(new[] {"Case Insensitive", "Case Sensitive"});
 
     public string SelectedCaseSensitivity
     {
       get => selectedCaseSensitivity;
       set
       {
-        if (value == selectedCaseSensitivity) 
+        if (value == selectedCaseSensitivity)
           return;
 
         selectedCaseSensitivity = value;
-        if (selectedCaseSensitivity == "Case Sensitive") 
-         Definition.IsCaseSensitive = true;
+        if (selectedCaseSensitivity == "Case Sensitive")
+          Definition.IsCaseSensitive = true;
         if (selectedCaseSensitivity == "Case Insensitive")
           Definition.IsCaseSensitive = false;
 
@@ -279,14 +286,15 @@ namespace JsonViewer.Controls
       }
     }
 
-    public ObservableCollection<string> ElementsToSearch { get; }= new ObservableCollection<string>(new[] { "Both", "Keys" , "Values"});
+    public ObservableCollection<string> ElementsToSearch { get; } =
+      new ObservableCollection<string>(new[] {"Both", "Keys", "Values"});
 
     public string SelectedElementToSearch
     {
       get => selectedElementToSearch;
       set
       {
-        if (value == selectedElementToSearch) 
+        if (value == selectedElementToSearch)
           return;
 
         selectedElementToSearch = value;
@@ -330,6 +338,7 @@ namespace JsonViewer.Controls
         OnPropertyChanged();
       }
     }
+
 
     public string SelectedPath
     {
@@ -382,6 +391,7 @@ namespace JsonViewer.Controls
         {
           OnSearchJson(null);
         }
+
         OnPropertyChanged();
       }
     }
@@ -408,6 +418,7 @@ namespace JsonViewer.Controls
         Json = jsonInput;
     }
 
+
     public string Json
     {
       get => json;
@@ -420,9 +431,12 @@ namespace JsonViewer.Controls
       }
     }
 
+    public ObservableCollection<string> SelectedPaths { get; } = new();
+
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
   }
 }

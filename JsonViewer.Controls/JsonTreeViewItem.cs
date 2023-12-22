@@ -12,28 +12,65 @@ namespace JsonViewer.Controls
     private static  SolidColorBrush blackBrush = new(Colors.Black);
     private static SolidColorBrush hilightBrush = new(Color.FromRgb(255,176,148));
     public static SolidColorBrush selectedFill = new SolidColorBrush(Colors.Gainsboro);
-    private object value;
-    public string Path { get; set; }
-    public int Depth { get; set; }
-    public int ChildRank { get; set; }
 
-    public string NodeType { get; set; }
-    public string Key { get; set; }
+    public JsonTreeViewItem()
+    {
+      
+    }
+
+    public JsonTreeViewItem(JsonItem jsonItem)
+    {
+      JsonItem = jsonItem;
+    }
+
+    private JsonItem JsonItem { get; set; } = new();
+
+    public string Path
+    {
+      get => JsonItem.Path;
+      set => JsonItem.Path = value;
+    }
+
+    public int Depth
+    {
+      get => JsonItem.Depth;
+      set => JsonItem.Depth = value;
+    }
+
+    public int ChildRank
+    {
+      get => JsonItem.ChildRank;
+      set => JsonItem.ChildRank = value;
+    }
+
+    public string NodeType
+    {
+      get => JsonItem.NodeType;
+      set => JsonItem.NodeType = value;
+    }
+
+    public string Key
+    {
+      get => JsonItem.Key;
+      set => JsonItem.Key = value;
+    }
 
     public object Value
     {
-      get => value;
-      set
-      {
-        this.value = value;
-        if (value is string strValue)
-          ValueAsText = strValue;
-        else
-          ValueAsText = value.ToString();
-      }
+      get => JsonItem.Value;
+      set => JsonItem.Value = value;
     }
 
-    public bool IsEmptyArray { get; set; }
+    public string ValueAsText
+    {
+      get=> JsonItem.ValueAsText;
+    }
+
+    public bool IsEmptyArray
+    {
+      get => JsonItem.IsEmptyArray;
+      set => JsonItem.IsEmptyArray = value;
+    }
 
     public bool IsKeyHilighted { get; set; }
     public bool IsValueHilighted { get; set; }
@@ -97,7 +134,7 @@ namespace JsonViewer.Controls
       return string.Empty;
     }
 
-    public string ValueAsText { get; private set; }
+    
 
     public JsonTreeViewItem ShallowClone()
     {

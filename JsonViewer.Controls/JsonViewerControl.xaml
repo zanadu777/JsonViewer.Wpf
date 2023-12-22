@@ -192,6 +192,20 @@
           </Grid>
         </TabItem>
         <TabItem Header ="Db">
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="100"></RowDefinition>
+              <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="100"></ColumnDefinition>
+              <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+         
+          <TextBlock>SelectedItems</TextBlock>
+            <ListBox Grid.Row="0" Grid.Column="1" ItemsSource ="{Binding SelectedPaths}"></ListBox>
+           </Grid>
 
         </TabItem>
 

@@ -34,7 +34,6 @@ namespace JsonViewer.Controls.NewtonsoftDependent
       foreach (JToken token in tokens)
         tokenDict.Add(token.Path, token);
 
-      var grayBrush = new SolidColorBrush(Colors.Gray);
       Dictionary<string, JsonTreeViewItem> nodeDict = new Dictionary<string, JsonTreeViewItem>();
       foreach (JToken token in tokens)
       {
@@ -63,12 +62,9 @@ namespace JsonViewer.Controls.NewtonsoftDependent
             if (tokenDict[token.Path][0] is JProperty && tokenDict[token.Path][1] is JObject)
             {
               var prop = tokenDict[token.Path][0] as JProperty;
-               
-              var header = new TextBlock();
-              header.Inlines.Add(new Run(prop.Name){FontWeight = FontWeights.Bold});
 
-              var valueNode = new JsonTreeViewItem { Header = header, Path = token.Path, Key = prop.Name, Value = string.Empty , NodeType = "object"};
-
+              var valueNode = new JsonTreeViewItem {   Path = token.Path, Key = prop.Name, Value = string.Empty , NodeType = "object"};
+              valueNode.GenerateHeader();
               AddNode(nodeDict, token, valueNode, nodes);
             }
 

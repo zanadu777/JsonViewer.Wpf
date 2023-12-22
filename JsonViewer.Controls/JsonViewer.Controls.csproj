@@ -54,10 +54,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\BoolToVisibilityConverter .cs" />
+    <Compile Include="Db\DbControl.xaml.cs">
+      <DependentUpon>DbControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Db\DbVm.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="DictionaryExtensions.cs" />
+    <Compile Include="Extensions\JsonItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="JsonFilterResult.cs" />
+    <Compile Include="JsonItem.cs" />
     <Compile Include="JsonTreeViewFilterDefinition.cs" />
     <Compile Include="JsonTreeViewItem.cs" />
     <Compile Include="JsonViewerControl.xaml.cs">
@@ -95,6 +101,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Db\DbControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="JsonViewerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
