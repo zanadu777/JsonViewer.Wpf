@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
-using System.Windows.Media;
+using JsonViewer.Controls.Core;
 using JsonViewer.Controls.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -28,19 +24,21 @@ namespace JsonViewer.Controls.NewtonsoftDependent
 
     public JsonNodes ConvertTokens(IEnumerable<JToken> tokens)
     {
-      var nodes = new ObservableCollection<JsonTreeViewItem>();
+      var nodes = new List<Tree<JsonItem>>();
 
       Dictionary<string, List<JToken>> tokenDict = new();
       foreach (JToken token in tokens)
         tokenDict.Add(token.Path, token);
 
-      Dictionary<string, JsonTreeViewItem> nodeDict = new Dictionary<string, JsonTreeViewItem>();
+      Dictionary<string, Tree<JsonItem>> nodeDict = new Dictionary<string, Tree<JsonItem>>();
       foreach (JToken token in tokens)
       {
         if (string.IsNullOrWhiteSpace(token.Path))
         {
-          var root = new JsonTreeViewItem { Header = "{", Path = token.Path, Depth = 0, Key = string.Empty, Value = string.Empty };
-          root.NodeType = "object";
+          var item = new JsonItem { Path = token.Path, Depth = 0, Key = string.Empty, Value = string.Empty, NodeType = "root" };
+          var root =new Tree<JsonItem>(item);
+
+          item.NodeType = "object";
           nodes.Add(root);
           nodeDict.Add(token.Path, root);
         }
@@ -52,9 +50,9 @@ namespace JsonViewer.Controls.NewtonsoftDependent
             {
               var prop = tokenDict[token.Path][0] as JProperty;
               var value = tokenDict[token.Path][1] as JValue;
-
-              var valueNode = new JsonTreeViewItem { Path = token.Path, Key = prop.Name, Value = value.Value, NodeType = "value"};
-              valueNode.GenerateHeader();
+              var valueType = GetValueType(value);
+              var valueItem  = new JsonItem { Path = token.Path, Key = prop.Name, Value = value.Value, NodeType = "value", ValueType=valueType};
+              var valueNode = new Tree<JsonItem>(valueItem);  
 
               AddNode(nodeDict, token, valueNode, nodes);
             }
@@ -63,9 +61,9 @@ namespace JsonViewer.Controls.NewtonsoftDependent
             {
               var prop = tokenDict[token.Path][0] as JProperty;
 
-              var valueNode = new JsonTreeViewItem {   Path = token.Path, Key = prop.Name, Value = string.Empty , NodeType = "object"};
-              valueNode.GenerateHeader();
-              AddNode(nodeDict, token, valueNode, nodes);
+              var valueNode = new JsonItem {   Path = token.Path, Key = prop.Name, Value = string.Empty , NodeType = "object"};
+             
+              AddNode(nodeDict, token, valueNode.ToTree(), nodes);
             }
 
             if (tokenDict[token.Path][0] is JProperty && tokenDict[token.Path][1] is JArray)
@@ -73,7 +71,7 @@ namespace JsonViewer.Controls.NewtonsoftDependent
               var prop = tokenDict[token.Path][0] as JProperty;
               var isEmptyArray = ! tokenDict[token.Path][1].Children().Any();
 
-              var valueNode = new JsonTreeViewItem
+              var valueNode = new JsonItem
               {
                 Path = token.Path,
                 Key = prop.Name,
@@ -81,8 +79,8 @@ namespace JsonViewer.Controls.NewtonsoftDependent
                 NodeType = "array",
                 IsEmptyArray = isEmptyArray
               };
-              valueNode.GenerateHeader();
-              AddNode(nodeDict, token, valueNode, nodes);
+             
+              AddNode(nodeDict, token, valueNode.ToTree(), nodes);
             }
           }
         }
@@ -90,49 +88,43 @@ namespace JsonViewer.Controls.NewtonsoftDependent
         else if (token is JValue && token.Parent is JArray)
         {
           var header = token.Path.ExtractJsonPathArrayPosition();
-          var valueNode = new JsonTreeViewItem
+          var valueNode = new JsonItem
           {
-            Header = $"{header} = {ValueDisplayText((JValue)token)}",
             Path = token.Path,
             Key = header.Trim('[', ']'),
             Value = ((JValue)token).Value,
             NodeType = "value"
           };
-          AddNode(nodeDict, token, valueNode, nodes);
+          AddNode(nodeDict, token, valueNode.ToTree(), nodes);
         }
 
         else if (token is JObject && token.Parent is JArray)
         {
-          var node = new JsonTreeViewItem { Header = $"{token.Path.ExtractJsonPathArrayPosition()}", Path = token.Path, Key = string.Empty, Value = string.Empty };
-          AddNode(nodeDict, token, node, nodes);
+          var node = new JsonItem {  Path = token.Path, Key = token.Path.ExtractJsonPathArrayPosition(), Value = string.Empty , NodeType = "arrayItem"};
+          AddNode(nodeDict, token, node.ToTree(), nodes);
         }
-
         else if (token is JValue || token is JObject || token is JArray)
         {
         }
         else
-        {
-          var node = new JsonTreeViewItem { Header = token.Path, Path = token.Path };
-          nodeDict.Add(token.Path, node);
-          nodes.Add(node);
-        }
+          throw new Exception("Unexpected token");
       }
 
-      return new JsonNodes() { Items = nodes, ItemsDictionary = nodeDict };
+      return new JsonNodes(nodes[0]) ;
     }
 
-    private static void AddNode(Dictionary<string, JsonTreeViewItem> nodeDict, JToken token, JsonTreeViewItem childNode, ObservableCollection<JsonTreeViewItem> nodes)
+    private static void AddNode(Dictionary<string, Tree<JsonItem>> nodeDict, JToken token, Tree<JsonItem> childNode, List<Tree<JsonItem>> nodes)
     {
       nodeDict.Add(token.Path, childNode);
       if (nodeDict.ContainsKey(token.Parent.Path))
       {
         var parent = nodeDict[token.Parent.Path];
-        childNode.Depth = parent.Depth++;
-        childNode.ChildRank = parent.Items.Count + 1;
-        parent.Items.Add(childNode);
+        childNode.Node.Depth = parent.Node.Depth + 1;
+        childNode.Node.ChildRank = parent.Children.Count ;
+        parent.Children.Add(childNode);
       }
       else
-        nodes.Add(childNode);
+       throw new Exception("parent should already be added");
     }
 
     private string ValueDisplayText(JValue valueNode)
@@ -179,6 +171,53 @@ namespace JsonViewer.Controls.NewtonsoftDependent
           throw new ArgumentOutOfRangeException();
       }
       return valueNode.ToString();
+    }
+
+    private JsonValueType GetValueType(JToken token)
+    {
+      switch (token.Type)
+      {
+        case JTokenType.None:
+          break;
+        case JTokenType.Object:
+          break;
+        case JTokenType.Array:
+          break;
+        case JTokenType.Constructor:
+          break;
+        case JTokenType.Property:
+          break;
+        case JTokenType.Comment:
+          break;
+        case JTokenType.Integer:
+          return JsonValueType.Integer;
+        case JTokenType.Float:
+          return JsonValueType.Float;
+        case JTokenType.String:
+          return JsonValueType.String;
+        case JTokenType.Boolean:
+          return JsonValueType.Boolean;
+        case JTokenType.Null:
+          return JsonValueType.None;
+        case JTokenType.Undefined:
+          break;
+        case JTokenType.Date:
+          return JsonValueType.DateTime;
+          break;
+        case JTokenType.Raw:
+          break;
+        case JTokenType.Bytes:
+          return JsonValueType.Bytes;
+        case JTokenType.Guid:
+          break;
+        case JTokenType.Uri:
+          break;
+        case JTokenType.TimeSpan:
+          break;
+        default:
+          throw new ArgumentOutOfRangeException();
+      }
+      return JsonValueType.None;
     }
   }
 }

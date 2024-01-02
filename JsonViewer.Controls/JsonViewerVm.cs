@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Controls;
 using System.Windows.Input;
+using JsonViewer.Controls.Db;
 using JsonViewer.Controls.NewtonsoftDependent;
 
 namespace JsonViewer.Controls
@@ -22,7 +24,8 @@ namespace JsonViewer.Controls
     private string selectedCaseSensitivity;
     private string selectedElementToSearch;
     private bool isAutoFiltering;
-    private bool isToolTrayVisible;
+    private bool isToolBarTrayVisible;
+    private bool isDbTabVisible;
 
     public ObservableCollection<JsonTreeViewItem> TreeViewItems { get; } = new();
     public ObservableCollection<JsonTreeViewItem> FilteredTreeViewItems { get; } = new();
@@ -37,6 +40,12 @@ namespace JsonViewer.Controls
     public ICommand RemoveFromSelectedItemsCommand { get; }
     public ICommand ClearSelectedItemsCommand { get; }
 
+    public ICommand CheckedVisibilityCommand { get; }
+
+    public ICommand UncheckedVisibilityCommand { get; }
+
+    public DbVm DbVm { get; } = new();
+
     public JsonViewerVm()
     {
       SearchJsonCommand = new DelegateCommand(OnSearchJson, _ => true);
@@ -45,6 +54,8 @@ namespace JsonViewer.Controls
       AddToSelectedItemsCommand = new DelegateCommand(OnAddToSelectedItems, _ => true);
       RemoveFromSelectedItemsCommand = new DelegateCommand(OnRemoveFromSelectedItemsCommand, _ => true);
       ClearSelectedItemsCommand = new DelegateCommand(OnClearSelectedItemsCommand, _ => true);
+      CheckedVisibilityCommand = new DelegateCommand(OnCheckedVisibilityCommand, _ => true);
+      UncheckedVisibilityCommand = new DelegateCommand(OnUncheckedVisibilityCommand, _ => true);
       IsCheckingKeys = true;
       IsCheckingValues = true;
       IsCaseSensitive = false;
@@ -52,6 +63,39 @@ namespace JsonViewer.Controls
 
       SelectedCaseSensitivity = "Case Insensitive";
       SelectedElementToSearch = "Both";
+      IsDbTabVisible = true;
+    }
+
+    private void OnUncheckedVisibilityCommand(object obj)
+    {
+      if (obj is string visibleObject)
+      {
+        switch (visibleObject)
+        {
+          case "Db":
+            IsDbTabVisible = false;
+            break;
+          case "ToolBarTray":
+            IsToolBarTrayVisible = false;
+            break;
+        }
+      }
+    }
+
+    private void OnCheckedVisibilityCommand(object obj)
+    {
+      if (obj is string visibleObject)
+      {
+        switch (visibleObject)
+        {
+          case "Db":
+            IsDbTabVisible = true;
+            break;
+          case "ToolBarTray":
+            IsToolBarTrayVisible = true;
+            break;
+        }
+      }
     }
 
     private void OnClearSelectedItemsCommand(object obj)
@@ -73,6 +117,8 @@ namespace JsonViewer.Controls
       }
 
       SelectedPaths.Clear();
+      if (IsDbTabVisible)
+        DbVm.ClearSelectedJsonItems();
     }
 
     private void OnRemoveFromSelectedItemsCommand(object obj)
@@ -81,6 +127,9 @@ namespace JsonViewer.Controls
       {
         nodeDict[SelectedPath].IsSelected = false;
         nodeDict[SelectedPath].GenerateHeader();
+
+        if (IsDbTabVisible)
+          DbVm.RemoveSelectedJsonItem(nodeDict[SelectedPath].JsonItem);
       }
 
       foreach (var node in FilteredTreeViewItems)
@@ -102,6 +151,9 @@ namespace JsonViewer.Controls
       {
         nodeDict[SelectedPath].IsSelected = true;
         nodeDict[SelectedPath].GenerateHeader();
+
+        if (IsDbTabVisible)
+          DbVm.AddSelectedJsonItem(nodeDict[SelectedPath].JsonItem);
       }
 
       foreach (var node in FilteredTreeViewItems)
@@ -113,6 +165,7 @@ namespace JsonViewer.Controls
           break;
         }
       }
+
 
       SelectedPaths.Add(SelectedPath);
     }
@@ -139,8 +192,10 @@ namespace JsonViewer.Controls
     {
       foreach (var node in nodeDict.Values)
       {
-        if (node.Items.Count > 0 && node.Depth > depth)
+        if (node.Items.Count > 0 && node.Depth <= depth)
+        {
           node.IsExpanded = true;
+        }
       }
     }
 
@@ -157,13 +212,13 @@ namespace JsonViewer.Controls
       }
     }
 
-    public bool IsToolTrayVisible
+    public bool IsToolBarTrayVisible
     {
-      get => isToolTrayVisible;
+      get => isToolBarTrayVisible;
       set
       {
-        if (value == isToolTrayVisible) return;
-        isToolTrayVisible = value;
+        if (value == isToolBarTrayVisible) return;
+        isToolBarTrayVisible = value;
         OnPropertyChanged();
       }
     }
@@ -264,7 +319,7 @@ namespace JsonViewer.Controls
     }
 
     public ObservableCollection<string> CaseSensitivities { get; } =
-      new ObservableCollection<string>(new[] {"Case Insensitive", "Case Sensitive"});
+      new ObservableCollection<string>(new[] { "Case Insensitive", "Case Sensitive" });
 
     public string SelectedCaseSensitivity
     {
@@ -287,7 +342,7 @@ namespace JsonViewer.Controls
     }
 
     public ObservableCollection<string> ElementsToSearch { get; } =
-      new ObservableCollection<string>(new[] {"Both", "Keys", "Values"});
+      new ObservableCollection<string>(new[] { "Both", "Keys", "Values" });
 
     public string SelectedElementToSearch
     {
@@ -333,7 +388,7 @@ namespace JsonViewer.Controls
           return;
 
         selectedItem = value;
-
+        DbVm.SelectedJsonItem = selectedItem?.JsonItem;
         SelectedPath = (value == null) ? null : selectedItem.Path;
         OnPropertyChanged();
       }
@@ -403,6 +458,9 @@ namespace JsonViewer.Controls
 
     private void DisplayJson(string jsonInput, bool fromPropertyChange)
     {
+      if (jsonInput == Json)
+        return;
+
       var nodeBuilder = new TreeNodeBuilder();
       TreeViewItems.Clear();
       var nodesResult = nodeBuilder.Build(jsonInput);
@@ -411,6 +469,9 @@ namespace JsonViewer.Controls
 
       foreach (var node in nodesResult.Items)
         TreeViewItems.Add(node);
+
+      var root = TreeViewItems[0];
+      root.IsExpanded = true;
 
       OpenWithDepthBelow(DefaultOpenWithDepthBelow);
 
@@ -427,6 +488,17 @@ namespace JsonViewer.Controls
         if (value == json) return;
         json = value;
         DisplayJson(json, true);
+        OnPropertyChanged();
+      }
+    }
+
+    public bool IsDbTabVisible
+    {
+      get => isDbTabVisible;
+      set
+      {
+        if (value == isDbTabVisible) return;
+        isDbTabVisible = value;
         OnPropertyChanged();
       }
     }

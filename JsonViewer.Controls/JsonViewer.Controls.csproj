@@ -54,11 +54,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\BoolToVisibilityConverter .cs" />
+    <Compile Include="Converters\LinesToHeightConverter.cs" />
+    <Compile Include="Core\GeneratedItem.cs" />
+    <Compile Include="Core\JsonValueType.cs" />
     <Compile Include="Db\DbControl.xaml.cs">
       <DependentUpon>DbControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Db\DbGenerators\DbGenerator.cs" />
+    <Compile Include="Db\DbGenerators\SelectMultiGenerator.cs" />
+    <Compile Include="Db\DbGenerators\SelectMultiUsingOpenJsonGenerator.cs" />
+    <Compile Include="Db\DbGenerators\UpdateSingleGenerator.cs" />
+    <Compile Include="Db\DbInfo.cs" />
     <Compile Include="Db\DbVm.cs" />
+    <Compile Include="Core\IsolatedStorageHelper.cs" />
+    <Compile Include="Db\DbGenerators\SelectSingleGenerator.cs" />
+    <Compile Include="Db\DbGenerators\SingleToColumnGenerator.cs" />
     <Compile Include="DelegateCommand.cs" />
+    <Compile Include="DesignTime\DesignTimeData.cs" />
     <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Extensions\JsonItemExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -73,14 +85,10 @@
       <DependentUpon>JsonViewerControlWrapper.xaml</DependentUpon>
     </Compile>
     <Compile Include="JsonViewerVm.cs" />
+    <Compile Include="NewtonsoftDependent\JsonItemExtensions.cs" />
     <Compile Include="NewtonsoftDependent\JsonTools.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -89,10 +97,11 @@
     </Compile>
     <Compile Include="JsonNodes.cs" />
     <Compile Include="NewtonsoftDependent\TreeNodeBuilder.cs" />
+    <Compile Include="Tree.cs" />
     <Compile Include="TreeProcessor.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

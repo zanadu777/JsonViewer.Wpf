@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JsonViewer.Controls"
              xmlns:converters="clr-namespace:JsonViewer.Controls.Converters"
+             xmlns:db="clr-namespace:JsonViewer.Controls.Db"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              
@@ -75,7 +76,18 @@
 
   </UserControl.Resources>
   <DockPanel>
-    <ToolBarTray DockPanel.Dock="Top">
+    <Menu DockPanel.Dock="Top">
+      <MenuItem Header="View" >
+        <MenuItem Header="Db" IsCheckable="True" IsChecked="False" CommandParameter="Db"
+                  Checked="CheckedVisibilityRoutedCommand"
+                  Unchecked="UncheckedVisibilityRoutedCommand"/>
+        <MenuItem Header="ToolBarTray" IsCheckable="True" IsChecked="False" CommandParameter="ToolBarTray"
+                Checked="CheckedVisibilityRoutedCommand"
+                Unchecked="UncheckedVisibilityRoutedCommand"/>
+      </MenuItem>
+    </Menu>
+    <ToolBarTray DockPanel.Dock="Top" 
+                 Visibility ="{Binding ElementName=This, Path=IsToolBarTrayVisible, Converter={StaticResource BoolToVisibilityConverter}}">
       <ToolBar>
         <Button Content="{StaticResource AddIcon}" Command="{Binding ElementName=This, Path= AddToSelectedItemsCommand}"/>
         <Button Content="{StaticResource RemoveIcon}"  Command="{Binding ElementName=This, Path= RemoveFromSelectedItemsCommand}"/>
@@ -179,34 +191,25 @@
               <RowDefinition />
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Path:"/>
-            <TextBox Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding ElementName=This, Path=SelectedPath}"/>
+            <DockPanel Grid.ColumnSpan="4">
+              <TextBlock Text="Path:" DockPanel.Dock="Left" Width="67" />
+              <TextBox Width="50" DockPanel.Dock="Right" Text="{Binding ElementName=This, Path=SelectedItem.Depth}"/>
+              <TextBlock Text="Depth:" DockPanel.Dock="Right"/>
+              <TextBox     Text="{Binding ElementName=This, Path=SelectedItem.Path}" />
+            </DockPanel>
 
             <TextBlock Text="Key:" Grid.Row="1" />
             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ElementName=This, Path= SelectedItem.Key, Mode=OneWay}"/>
-            <TextBlock Text="Node Type:" Grid.Row="1" Grid.Column="2"/>
+            <TextBlock Text="Node Type:" Grid.Row="1" Grid.Column="2"  />
             <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding ElementName=This, Path= SelectedItem.NodeType, Mode=OneWay}"/>
 
             <TextBlock Text="Value:"  Grid.Row="2" />
             <TextBox Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" Grid.ColumnSpan="3" Text="{Binding ElementName=This, Path=SelectedItem.ValueAsText , Mode=OneWay}" AcceptsReturn="True" TextWrapping="WrapWithOverflow"/>
           </Grid>
         </TabItem>
-        <TabItem Header ="Db">
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="100"></RowDefinition>
-              <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>
-
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="100"></ColumnDefinition>
-              <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-         
-          <TextBlock>SelectedItems</TextBlock>
-            <ListBox Grid.Row="0" Grid.Column="1" ItemsSource ="{Binding SelectedPaths}"></ListBox>
-           </Grid>
-
+        <TabItem Header ="Db" 
+                 Visibility="{Binding ElementName=This, Path=IsDbTabVisible, Converter ={StaticResource BoolToVisibilityConverter}}">
+          <db:DbControl DataContext="{Binding ElementName=This , Path = DbVm}"/>
         </TabItem>
 
       </TabControl>

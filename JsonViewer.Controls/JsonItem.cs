@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using JsonViewer.Controls.Core;
 
 namespace JsonViewer.Controls
 {
@@ -14,6 +11,8 @@ namespace JsonViewer.Controls
     public int ChildRank { get; set; }
 
     public string NodeType { get; set; }
+
+    public JsonValueType ValueType { get; set; }
     public string Key { get; set; }
 
     public object Value
@@ -34,5 +33,10 @@ namespace JsonViewer.Controls
     public bool IsEmptyArray { get; set; }
 
     public List<JsonItem> Children { get; set; } = new();
+
+    public override string ToString()
+    {
+      return $"{Path}";
+    }
   }
 }

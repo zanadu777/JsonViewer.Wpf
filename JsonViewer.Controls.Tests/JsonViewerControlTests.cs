@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using FluentAssertions;
 
 namespace JsonViewer.Controls.Tests

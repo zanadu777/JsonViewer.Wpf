@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using JsonViewer.Controls.Db;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -115,6 +116,28 @@ namespace JsonViewer.Controls
     }
     #endregion
 
+    #region CheckedVisibilityCommand
+    public static readonly DependencyProperty checkedVisibilityCommandProperty = DependencyProperty.Register(
+      nameof(CheckedVisibilityCommand), typeof(ICommand), typeof(JsonViewerControl), new PropertyMetadata(default(ICommand)));
+
+    public ICommand CheckedVisibilityCommand
+    {
+      get { return (ICommand)GetValue(checkedVisibilityCommandProperty); }
+      set { SetValue(checkedVisibilityCommandProperty, value); }
+    }
+    #endregion
+
+    #region UncheckedVisibilityCommand
+    public static readonly DependencyProperty uncheckedVisibilityCommandProperty = DependencyProperty.Register(
+      nameof(UncheckedVisibilityCommand), typeof(ICommand), typeof(JsonViewerControl), new PropertyMetadata(default(ICommand)));
+
+    public ICommand UncheckedVisibilityCommand
+    {
+      get { return (ICommand)GetValue(uncheckedVisibilityCommandProperty); }
+      set { SetValue(uncheckedVisibilityCommandProperty, value); }
+    }
+    #endregion
+
     #region SelectedValue 
     public static readonly DependencyProperty SelectedValueProperty = DependencyProperty.Register(
       nameof(SelectedValue), typeof(object), typeof(JsonViewerControl), new PropertyMetadata(default(object)));
@@ -161,6 +184,39 @@ namespace JsonViewer.Controls
     }
     #endregion
 
+    #region IsDbTabVisible
+    public static readonly DependencyProperty isDbTabVisibleProperty = DependencyProperty.Register(
+      nameof(IsDbTabVisible), typeof(bool), typeof(JsonViewerControl), new PropertyMetadata(default(bool)));
+
+    public bool IsDbTabVisible
+    {
+      get { return (bool)GetValue(isDbTabVisibleProperty); }
+      set { SetValue(isDbTabVisibleProperty, value); }
+    }
+    #endregion
+
+    #region IsToolBarTrayVisible
+    public static readonly DependencyProperty isToolBarTrayVisibleProperty = DependencyProperty.Register(
+      nameof(IsToolBarTrayVisible), typeof(bool), typeof(JsonViewerControl), new PropertyMetadata(default(bool)));
+
+    public bool IsToolBarTrayVisible
+    {
+      get { return (bool)GetValue(isToolBarTrayVisibleProperty); }
+      set { SetValue(isToolBarTrayVisibleProperty, value); }
+    }
+    #endregion
+
+    #region DbVm
+    public static readonly DependencyProperty dbVmProperty = DependencyProperty.Register(
+      nameof(DbVm), typeof(DbVm), typeof(JsonViewerControl), new PropertyMetadata(default(DbVm)));
+
+    public DbVm DbVm
+    {
+      get { return (DbVm)GetValue(dbVmProperty); }
+      set { SetValue(dbVmProperty, value); }
+    }
+    #endregion
+
     private void TreeViewControl_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
       SelectedItem = (JsonTreeViewItem)e.NewValue;
@@ -169,6 +225,18 @@ namespace JsonViewer.Controls
     private void TreeViewItem_RequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
     {
       e.Handled = true;
+    }
+
+    private void CheckedVisibilityRoutedCommand(object sender, RoutedEventArgs e)
+    {
+      if (DataContext is JsonViewerVm vm && sender is MenuItem menuItem)
+        vm.CheckedVisibilityCommand.Execute(menuItem.CommandParameter);
+    }
+
+    private void UncheckedVisibilityRoutedCommand(object sender, RoutedEventArgs e)
+    {
+      if (DataContext is JsonViewerVm vm && sender is MenuItem menuItem)
+        vm.UncheckedVisibilityCommand.Execute(menuItem.CommandParameter);
     }
   }
 }

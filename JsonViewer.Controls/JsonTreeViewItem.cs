@@ -11,7 +11,7 @@ namespace JsonViewer.Controls
     private static SolidColorBrush grayBrush = new(Colors.Gray);
     private static  SolidColorBrush blackBrush = new(Colors.Black);
     private static SolidColorBrush hilightBrush = new(Color.FromRgb(255,176,148));
-    public static SolidColorBrush selectedFill = new SolidColorBrush(Colors.Gainsboro);
+    public static SolidColorBrush selectedFill = new(Colors.Gainsboro);
 
     public JsonTreeViewItem()
     {
@@ -23,7 +23,7 @@ namespace JsonViewer.Controls
       JsonItem = jsonItem;
     }
 
-    private JsonItem JsonItem { get; set; } = new();
+    public JsonItem JsonItem { get; set; } = new();
 
     public string Path
     {
@@ -81,6 +81,9 @@ namespace JsonViewer.Controls
     {
       switch (NodeType)
       {
+        case "root":
+          Header = Wrap(new TextBlock { Text = "{", FontWeight = FontWeights.Bold });
+          break;
         case "value":
           var valueHeader = new TextBlock();
           valueHeader.Inlines.Add(new Run($" {Key} "){Background = IsKeyHilighted? hilightBrush:null });
@@ -101,6 +104,11 @@ namespace JsonViewer.Controls
           var objHeader = new TextBlock();
           objHeader.Inlines.Add(new Run(Key) { FontWeight = FontWeights.Bold , Foreground=blackBrush});
           Header = Wrap(objHeader);
+          break;
+        case "arrayItem":
+          var arrayItemHeader = new TextBlock();
+          arrayItemHeader.Inlines.Add(new Run(Key) { FontWeight = FontWeights.Bold, Foreground = grayBrush });
+          Header = Wrap(arrayItemHeader);
           break;
       }
     }
@@ -134,8 +142,6 @@ namespace JsonViewer.Controls
       return string.Empty;
     }
 
-    
-
     public JsonTreeViewItem ShallowClone()
     {
       var clone = new JsonTreeViewItem();
@@ -149,6 +155,11 @@ namespace JsonViewer.Controls
       clone.IsValueHilighted = IsValueHilighted;
       clone.IsEmptyArray= IsEmptyArray;
       return clone;
+    }
+
+    public override string ToString()
+    {
+      return $"{Path}";
     }
   }
 }

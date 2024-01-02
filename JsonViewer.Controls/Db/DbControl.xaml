@@ -4,9 +4,128 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JsonViewer.Controls.Db"
+             xmlns:designTime="clr-namespace:JsonViewer.Controls.DesignTime"
+             xmlns:converters="clr-namespace:JsonViewer.Controls.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{x:Static designTime:DesignTimeData.DbVm}">
+  <UserControl.Resources>
+    <converters:LinesToHeightConverter x:Key="LinesToHeightConverter"/>
+  </UserControl.Resources>
+  <Grid>
+    <Grid.RowDefinitions>
+
+      <RowDefinition Height="30"></RowDefinition>
+      <RowDefinition Height="*"></RowDefinition>
+    </Grid.RowDefinitions>
+
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="100"></ColumnDefinition>
+      <ColumnDefinition Width="*"></ColumnDefinition>
+    </Grid.ColumnDefinitions>
+
+
+
+    <Grid Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2">
+      <Grid.Resources>
+        <Style TargetType="TextBlock">
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="4"/>
+          <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+        <Style TargetType="TextBox">
+          <Setter Property="Margin" Value="4"/>
+        </Style>
+
+
+      </Grid.Resources>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="120"/>
+        <ColumnDefinition/>
+        <ColumnDefinition Width="120"/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+
+
+      <TextBlock  >Table Name:</TextBlock>
+      <TextBox Grid.Column="1" Text="{Binding TableName, UpdateSourceTrigger=PropertyChanged}"/>
+      <TextBlock  Grid.Column="2" >Json Column Name:</TextBlock>
+      <TextBox Grid.Column="3" Text="{Binding ColumnName , UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
+    <TabControl Grid.Row="1" Grid.ColumnSpan="2" SelectedIndex="{Binding SelectedIndex}" >
+      <TabItem Header="Selected Node">
+        <DockPanel>
+          <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding SelectedJsonItemAsCollection}" 
+                    CanUserAddRows="False" 
+                    AutoGenerateColumns="False" 
+                    HorizontalScrollBarVisibility="Disabled" >
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Key" Binding="{Binding Key}" FontWeight="Bold"/>
+              <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
+              <DataGridTextColumn Header="Depth" Binding="{Binding Depth}"/>
+              <DataGridTextColumn Header="ChildRank" Binding="{Binding ChildRank}"/>
+              <DataGridTextColumn Header="Node Type" Binding="{Binding NodeType}"/>
+              <DataGridTextColumn Header="Value Type" Binding="{Binding ValueType}"/>
+              <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*" />
+            </DataGrid.Columns>
+          </DataGrid>
+
+          <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding GeneratedItemsFromSelectedItem}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Grid Margin="4">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="*"/>
+                  </Grid.ColumnDefinitions>
+                  <TextBlock  Text="{Binding Name}"/>
+                  <TextBox Grid.Column="1" AcceptsReturn="True" 
+                           Text="{Binding Value}" 
+                           Height ="{Binding LineCount, Converter={StaticResource LinesToHeightConverter} }" />
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </DockPanel>
+      </TabItem>
+      <TabItem Header="Selected Nodes" IsEnabled="{Binding IsSelectedJsonItems}">
+        <DockPanel>
+          <DataGrid DockPanel.Dock="Top" ItemsSource="{Binding SelectedJsonItems}"
+                    CanUserAddRows="False" 
+                    AutoGenerateColumns="False"
+                    HorizontalScrollBarVisibility="Disabled"
+                   >
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Key" Binding="{Binding Key}" FontWeight="Bold"/>
+              <DataGridTextColumn Header="Path" Binding="{Binding Path}"/>
+              <DataGridTextColumn Header="Depth" Binding="{Binding Depth}"/>
+              <DataGridTextColumn Header="ChildRank" Binding="{Binding ChildRank}"/>
+              <DataGridTextColumn Header="Node Type" Binding="{Binding NodeType}"/>
+              <DataGridTextColumn Header="Value Type" Binding="{Binding ValueType}"/>
+              <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
+            </DataGrid.Columns>
+          </DataGrid>
+
+          <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding GeneratedMultiItemsFromSelectedItems}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Grid Margin="4">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="*"/>
+                  </Grid.ColumnDefinitions>
+                  <TextBlock  Text="{Binding Name}"/>
+                  <TextBox Grid.Column="1" AcceptsReturn="True"  
+                           Text="{Binding Value}" 
+                           Height ="{Binding LineCount, Converter={StaticResource LinesToHeightConverter} }"/>
+                </Grid>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </DockPanel>
+      </TabItem>
+    </TabControl>
+
+
+  </Grid>
 </UserControl>

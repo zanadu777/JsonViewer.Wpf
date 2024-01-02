@@ -4,8 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:JsonViewer.Controls"
+             xmlns:designTime="clr-namespace:JsonViewer.Controls.DesignTime"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{x:Static designTime:DesignTimeData.JsonViewerVm}">
     <Grid>
     <local:JsonViewerControl x:Name="TreeView" 
                                 ItemsSource="{Binding TreeViewItems}"
@@ -16,8 +18,13 @@
                                 AddToSelectedItemsCommand="{Binding AddToSelectedItemsCommand}"
                                 RemoveFromSelectedItemsCommand ="{Binding RemoveFromSelectedItemsCommand}"
                                 ClearSelectedItemsCommand="{Binding ClearSelectedItemsCommand}"
+                                UncheckedVisibilityCommand="{Binding UncheckedVisibilityCommand}"
+                                CheckedVisibilityCommand="{Binding CheckedVisibilityCommand}"
                                 FilterText="{Binding FilterText, Mode=TwoWay}"
                                 JsonTabSelectedIndex ="{Binding Path=JsonTabSelectedIndex, Mode=TwoWay}"
-                                Json="{Binding Path= Json, Mode=OneWay}"/>
+                                IsDbTabVisible="{Binding Path=IsDbTabVisible, Mode=TwoWay}"
+                                IsToolBarTrayVisible="{Binding Path=IsToolBarTrayVisible, Mode=TwoWay}"
+                                Json="{Binding Path= Json, Mode=OneWay}"
+                                DbVm="{Binding DbVm, Mode=OneWay}"/>
   </Grid>
 </UserControl>
